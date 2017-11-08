@@ -21,7 +21,7 @@ function Chat($p){
 	
 	if ($token == $SetToken) {
 		
-		$sentence = explode(" ", $text);
+		$sentence = explode(" ", $text, 4);
 		$question = "";
 		$answer = "";
 		if ($sentence[1] == "#學習" or $sentence[1] == "#learn") {
