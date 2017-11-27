@@ -40,7 +40,7 @@ function Chat($p){
 			$PeopleQuestion = trim($sentence[1]);
 			$SQLAnswer = SQLReadBrain($PeopleQuestion);
 			if($SQLAnswer) {
-				echo "{\"text\": \"@" .$user_name." ".$SQLAnswer. "\"}";
+				echo "{\"text\": \"@" .$user_name." ".addslashes($SQLAnswer). "\"}";
 			} else {
 				echo "{\"text\": \"@" . $user_name. " 不好意思，這方面我不太懂，可以教我嗎？(#學習(learn) 你的問題 我的回答)\"}";
 			}
