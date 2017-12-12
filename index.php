@@ -38,6 +38,13 @@ function Chat($p){
 		} elseif ($sentence[1]) {
 
 			$PeopleQuestion = trim($sentence[1]);
+			
+			if ($sentence[1] == "叫雞"){
+				$Link = SQLReturnJPGLink();
+				echo "{\"text\": \"" . 這位滿意嗎？. "\" , \"file_url\": \"".addslashes($Link)."\"}";		
+				SQLRecord($user_name, $Link);
+			}
+			
 			$SQLAnswer = SQLReadBrain($PeopleQuestion);
 			if($SQLAnswer) {
 				echo "{\"text\": \"@" .$user_name." ".addslashes($SQLAnswer). "\"}";
@@ -100,6 +107,61 @@ function SQLReadBrain($question){
 		mysqli_close($conn);
 		return NULL;
 	}
+		
+}
+
+function SQLReturnJPGLink(){
+
+	include 'SQLInfo.php';
+		
+	// Create connection
+    $conn = mysqli_connect($servername, $username, $password, "Girls");
+
+    if (!$conn) {
+        die("Connection failed: " . mysqli_connect_error());
+    }
+	
+	$sql = "SELECT ImagesLink FROM ImgLink ORDER BY RAND() LIMIT 1";
+
+	$result = mysqli_query($conn, $sql);
+	
+	if ($result){
+		$row = mysqli_fetch_array($result, MYSQLI_NUM);
+//		printf ("%s \n", $row[0]);
+	} else {
+		echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+	}
+	
+	mysqli_free_result($result);	
+	mysqli_close($conn);
+	return $row[0];
+	
+}
+
+function SQLRecord($Caller, $Link){
+
+	include 'SQLInfo.php';
+
+	// Create connection
+    $conn = mysqli_connect($servername, $username, $password, "Girls");
+
+    if (!$conn) {
+        die("Connection failed: " . mysqli_connect_error());
+    }	
+	
+	$sql = "INSERT INTO  Request(caller, RespondLink) 
+			VALUES ('$Caller', '$Link')";
+	
+	mysqli_query($conn, $sql);
+
+//	if (mysqli_query($conn, $sql)){
+//		echo "New record created successfully";
+//	} else {
+//		echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+//	} 
+
+	mysqli_close($conn);
+	return 0;
 		
 }
 
